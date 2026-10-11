@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertex · Trading Terminal (demo)</title>
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #0b0e14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* main trading terminal card */
+    .terminal {
+      max-width: 1400px;
+      width: 100%;
+      background: #12161f;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ----- header row ----- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      background: linear-gradient(145deg, #2b6aff, #6a4eff);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 6px 14px rgba(43, 106, 255, 0.4);
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      background: linear-gradient(to right, #ffffff, #b0c2ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .balance {
+      background: #1b212c;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid #2a313e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .balance-label {
+      color: #8b99b0;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .balance-value {
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+
+    .balance-value i {
+      color: #2b6aff;
+      font-size: 14px;
+      margin-left: 6px;
+    }
+
+    .avatar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1b212c;
+      border-radius: 30px;
+      padding: 5px 12px 5px 6px;
+      border: 1px solid #2a313e;
+      cursor: default;
+    }
+
+    .avatar-img {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(145deg, #3d4d6b, #1e2a3a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b7c9ff;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid #3d4f70;
+    }
+
+    .avatar-name {
+      color: #e2e8f0;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .avatar-name i {
+      font-size: 10px;
+      color: #5e7a9e;
+      margin-left: 4px;
+    }
+
+    /* ----- asset header + main chart row ----- */
+    .asset-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: #171d27;
+      padding: 12px 18px;
+      border-radius: 18px;
+      border: 1px solid #262e3b;
+    }
+
+    .asset-info {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .pair {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pair-icon {
+      width: 38px;
+      height: 38px;
+      background: #0f141c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #cfdefa;
+      border: 1px solid #2b3648;
+    }
+
+    .pair-name {
+      font-weight: 700;
+      font-size: 22px;
+      color: white;
+      letter-spacing: -0.3px;
+    }
+
+    .pair-name span {
+      font-weight: 400;
+      font-size: 16px;
+      color: #8195b0;
+      margin-left: 6px;
+    }
+
+    .price-large {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .price-main {
+      font-weight: 700;
+      font-size: 26px;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .change {
+      font-weight: 600;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 30px;
+      background: #13261e;
+      color: #25c685;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #1e4034;
+    }
+
+    .change.negative {
+      background: #2d1a1f;
+      color: #f05b6b;
+      border-color: #49252e;
+    }
+
+    .stats-mini {
+      display: flex;
+      gap: 28px;
+      color: #8195b0;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .stats-mini div span {
+      color: white;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .trade-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: default;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #262e3b;
+      color: white;
+      border: 1px solid #364153;
+    }
+
+    .btn-primary {
+      background: #2b6aff;
+      border: 1px solid #4b82ff;
+      box-shadow: 0 8px 18px -6px rgba(43, 106, 255, 0.4);
+    }
+
+    .btn-primary i {
+      font-size: 14px;
+    }
+
+    /* ----- main grid: chart + orderbook / trade panel ----- */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 22px;
+    }
+
+    /* chart card */
+    .chart-card {
+      background: #171d27;
+      border-radius: 22px;
+      border: 1px solid #262e3b;
+      padding: 18px 18px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .timeframes {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tf {
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 20px;
+      background: transparent;
+      color: #7b8da3;
+      border: 1px solid transparent;
+      cursor: default;
+    }
+
+    .tf.active {
+      background: #232d3d;
+      color: white;
+      border-color: #3b4b62;
+    }
+
+    .chart-tools i {
+      color: #7b8da3;
+      margin-left: 12px;
+      font-size: 14px;
+      cursor: default;
+    }
+
+    .chart-canvas-container {
+      width: 100%;
+      height: 240px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 12px;
+      background: #10151d;
+    }
+
+    .chart-footer {
+      display: flex;
+      justify-content: space-between;
+      color: #5e7189;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 4px 0;
+      border-top: 1px solid #1f2732;
+      margin-top: 6px;
+    }
+
+    /* order book + trade panel column */
+    .order-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .order-book {
+      background: #171d27;
+      border-radius: 22px;
+      border: 1px solid #262e3b;
+      padding: 18px;
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .order-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.2px;
+    }
+
+    .order-header span {
+      font-size: 12px;
+      color: #6b7d96;
+      background: #1e2532;
+      padding: 4px 10px;
+      border-radius: 40px;
+    }
+
+    .order-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 0;
+      border-bottom: 1px solid #1e2532;
+    }
+
+    .order-row.header {
+      color: #6b7d96;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      border-bottom: 1px solid #2a3342;
+      padding-bottom: 10px;
+      margin-bottom: 4px;
+    }
+
+    .order-row .price {
+      color: #25c685;
+      font-weight: 600;
+    }
+
+    .order-row .price.red {
+      color: #f05b6b;
+    }
+
+    .order-row .amount {
+      color: #d2def0;
+      text-align: right;
+    }
+
+    .order-row .total {
+      color: #8195b0;
+      text-align: right;
+    }
+
+    .order-row.header .total,
+    .order-row.header .amount {
+      text-align: right;
+    }
+
+    .depth-bar {
+      height: 4px;
+      background: #26303e;
+      border-radius: 4px;
+      margin-top: 4px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .depth-fill {
+      height: 100%;
+      background: #25c685;
+      width: 70%;
+      border-radius: 4px;
+    }
+
+    /* trade widget */
+    .trade-widget {
+      background: #171d27;
+      border-radius: 22px;
+      border: 1px solid #262e3b;
+      padding: 20px;
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .trade-widget h3 {
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trade-widget h3 i {
+      color: #2b6aff;
+      font-size: 14px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #7b8da3;
+      letter-spacing: 0.3px;
+    }
+
+    .input-field {
+      background: #10161f;
+      border: 1px solid #2a3342;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .input-field span:last-child {
+      color: #6b7d96;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin: 22px 0 12px;
+    }
+
+    .btn-buy, .btn-sell {
+      flex: 1;
+      padding: 14px 0;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: default;
+      transition: 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-buy {
+      background: #1f3b32;
+      color: #25c685;
+      border: 1px solid #2b5c4a;
+    }
+
+    .btn-sell {
+      background: #3b2229;
+      color: #f05b6b;
+      border: 1px solid #5e2e38;
+    }
+
+    .btn-buy i, .btn-sell i {
+      font-size: 13px;
+    }
+
+    .percentage-slider {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .percentage-slider span {
+      flex: 1;
+      text-align: center;
+      background: #1b212c;
+      padding: 6px 0;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8195b0;
+      border: 1px solid #2a313e;
+      cursor: default;
+    }
+
+    .percentage-slider span:first-child {
+      color: #25c685;
+      border-color: #2b5c4a;
+      background: #1f3b32;
+    }
+
+    /* bottom info bar */
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #5e7189;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 0 6px;
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #25c685;
+      margin-right: 8px;
+      box-shadow: 0 0 0 2px rgba(37, 198, 133, 0.2);
+    }
+
+    .footer-right i {
+      margin-left: 18px;
+      font-size: 14px;
+      color: #4e6076;
+      cursor: default;
+    }
+
+    /* responsive */
+    @media (max-width: 1000px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .terminal {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .asset-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="terminal">
+  <!-- header -->
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="logo-text">VERTEX</div>
+    </div>
+    <div class="header-actions">
+      <div class="balance">
+        <span class="balance-label">Available</span>
+        <span class="balance-value">$24,860.42 <i class="fas fa-chevron-down"></i></span>
+      </div>
+      <div class="avatar">
+        <div class="avatar-img">JD</div>
+        <span class="avatar-name">James <i class="fas fa-chevron-down"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- asset header -->
+  <div class="asset-header">
+    <div class="asset-info">
+      <div class="pair">
+        <div class="pair-icon">BTC</div>
+        <div class="pair-name">BTC/USDT <span>· spot</span></div>
+      </div>
+      <div class="price-large">
+        <div class="price-main">$63,842.10</div>
+        <div class="change"><i class="fas fa-caret-up"></i> +2.34%</div>
+      </div>
+      <div class="stats-mini">
+        <div>24h high <span>$64,210</span></div>
+        <div>24h low <span>$61,890</span></div>
+        <div>Vol <span>1.24B</span></div>
+      </div>
+    </div>
+    <div class="trade-actions">
+      <button class="btn"><i class="fas fa-star"></i> Watch</button>
+      <button class="btn btn-primary"><i class="fas fa-bolt"></i> Trade</button>
+    </div>
+  </div>
+
+  <!-- main grid: chart + orderbook/trade -->
+  <div class="main-grid">
+    <!-- left: chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="timeframes">
+          <span class="tf">1m</span>
+          <span class="tf">5m</span>
+          <span class="tf active">15m</span>
+          <span class="tf">1h</span>
+          <span class="tf">4h</span>
+          <span class="tf">1d</span>
+        </div>
+        <div class="chart-tools">
+          <i class="fas fa-chart-simple"></i>
+          <i class="fas fa-sliders"></i>
+          <i class="fas fa-expand"></i>
+        </div>
+      </div>
+      <div class="chart-canvas-container">
+        <canvas id="priceChart" width="800" height="240"></canvas>
+      </div>
+      <div class="chart-footer">
+        <span>O 63,420 H 64,120 L 63,180 C 63,842</span>
+        <span>Vol 342.5M</span>
+      </div>
+    </div>
+
+    <!-- right: order book + trade widget -->
+    <div class="order-panel">
+      <!-- order book -->
+      <div class="order-book">
+        <div class="order-header">
+          <h3><i class="fas fa-list-ul" style="margin-right: 8px; color: #4e7eff;"></i>Order book</h3>
+          <span>0.1 depth</span>
+        </div>
+        <!-- asks (red) -->
+        <div class="order-row header">
+          <span>Price (USDT)</span>
+          <span class="amount">Amount (BTC)</span>
+          <span class="total">Total</span>
+        </div>
+        <div class="order-row">
+          <span class="price red">63,860.5</span>
+          <span class="amount">0.874</span>
+          <span class="total">55,823</span>
+        </div>
+        <div class="order-row">
+          <span class="price red">63,858.0</span>
+          <span class="amount">1.231</span>
+          <span class="total">78,547</span>
+        </div>
+        <div class="order-row">
+          <span class="price red">63,855.2</span>
+          <span class="amount">0.582</span>
+          <span class="total">37,172</span>
+        </div>
+        <div class="order-row">
+          <span class="price red">63,850.0</span>
+          <span class="amount">2.115</span>
+          <span class="total">135,057</span>
+        </div>
+        <!-- spread separator -->
+        <div style="display: flex; justify-content: space-between; padding: 12px 0 6px; color: #ccd9ec; font-weight: 600; font-size: 14px; border-bottom: 1px solid #1e2532;">
+          <span>63,842.1</span>
+          <span style="color: #7b8da3;">spread 0.02%</span>
+        </div>
+        <!-- bids (green) -->
+        <div class="order-row">
+          <span class="price">63,842.1</span>
+          <span class="amount">0.451</span>
+          <span class="total">28,795</span>
+        </div>
+        <div class="order-row">
+          <span class="price">63,839.8</span>
+          <span class="amount">1.834</span>
+          <span class="total">117,048</span>
+        </div>
+        <div class="order-row">
+          <span class="price">63,836.5</span>
+          <span class="amount">0.982</span>
+          <span class="total">62,688</span>
+        </div>
+        <div class="order-row">
+          <span class="price">63,832.0</span>
+          <span class="amount">3.021</span>
+          <span class="total">192,816</span>
+        </div>
+        <!-- depth bar (visual) -->
+        <div class="depth-bar" style="margin-top: 12px;">
+          <div class="depth-fill" style="width: 68%; background: #25c685;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; color: #6b7d96; font-size: 11px; margin-top: 8px;">
+          <span>Bids 68%</span>
+          <span>Asks 32%</span>
+        </div>
+      </div>
+
+      <!-- trade widget -->
+      <div class="trade-widget">
+        <h3><i class="fas fa-arrow-right-arrow-left"></i> Quick trade</h3>
+        <div class="input-group">
+          <label>Price</label>
+          <div class="input-field">
+            <span>63,842.10</span>
+            <span>USDT</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Amount</label>
+          <div class="input-field">
+            <span>0.50</span>
+            <span>BTC</span>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-buy"><i class="fas fa-arrow-up"></i> Buy</button>
+          <button class="btn-sell"><i class="fas fa-arrow-down"></i> Sell</button>
+        </div>
+        <div class="percentage-slider">
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom status -->
+  <div class="footer-bar">
+    <div><span class="live-dot"></span> Live · Binance · Depth 0.1</div>
+    <div class="footer-right">
+      <i class="fas fa-cog"></i>
+      <i class="fas fa-bell"></i>
+      <i class="fas fa-user"></i>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const canvas = document.getElementById('priceChart');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas resolution for crisp rendering (2x)
+    const dpr = window.devicePixelRatio || 1;
+    const container = canvas.parentElement;
+    const rect = container.getBoundingClientRect();
+    const width = rect.width;
+    const height = 240;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.scale(dpr, dpr);
+
+    // ---- generate realistic price series ----
+    const points = 60;
+    const data = [];
+    let basePrice = 63800;
+    const volatility = 120;
+
+    for (let i = 0; i < points; i++) {
+      // random walk with slight uptrend
+      const change = (Math.random() - 0.48) * volatility;
+      basePrice = Math.max(62500, Math.min(64800, basePrice + change));
+      // add some wave shape
+      const wave = Math.sin(i * 0.3) * 80;
+      const noise = (Math.random() - 0.5) * 60;
+      data.push(basePrice + wave + noise);
+    }
+
+    // ensure last price matches the displayed 63,842.10 approx
+    data[data.length - 1] = 63842.10;
+
+    // find min/max for scaling
+    const minVal = Math.min(...data) - 30;
+    const maxVal = Math.max(...data) + 30;
+
+    // ---- drawing functions ----
+    function drawChart() {
+      ctx.clearRect(0, 0, width, height);
+
+      // background gradient (dark)
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, '#0f141c');
+      bgGrad.addColorStop(1, '#0c1118');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // draw grid lines (horizontal)
+      ctx.strokeStyle = '#1e2732';
+      ctx.lineWidth = 0.5;
+      const gridLines = 5;
+      for (let i = 1; i < gridLines; i++) {
+        const y = (i / gridLines) * height;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.strokeStyle = '#1e2732';
+        ctx.stroke();
+      }
+
+      // vertical grid (light)
+      for (let i = 1; i < 6; i++) {
+        const x = (i / 6) * width;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.strokeStyle = '#1a212b';
+        ctx.stroke();
+      }
+
+      // map data points to coordinates
+      const paddingX = 16;
+      const paddingY = 18;
+      const graphWidth = width - paddingX * 2;
+      const graphHeight = height - paddingY * 2;
+
+      const pointsCoords = data.map((val, idx) => {
+        const x = paddingX + (idx / (points - 1)) * graphWidth;
+        const y = paddingY + graphHeight - ((val - minVal) / (maxVal - minVal)) * graphHeight;
+        return { x, y };
+      });
+
+      // ----- fill area under line (gradient) -----
+      ctx.beginPath();
+      ctx.moveTo(pointsCoords[0].x, pointsCoords[0].y);
+      for (let i = 1; i < pointsCoords.length; i++) {
+        ctx.lineTo(pointsCoords[i].x, pointsCoords[i].y);
+      }
+      ctx.lineTo(pointsCoords[pointsCoords.length - 1].x, height - 6);
+      ctx.lineTo(pointsCoords[0].x, height - 6);
+      ctx.closePath();
+
+      const fillGrad = ctx.createLinearGradient(0, 0, 0, height);
+      fillGrad.addColorStop(0, 'rgba(43, 106, 255, 0.25)');
+      fillGrad.addColorStop(0.8, 'rgba(43, 106, 255, 0.02)');
+      ctx.fillStyle = fillGrad;
+      ctx.fill();
+
+      // ----- stroke line (glow) -----
+      ctx.beginPath();
+      ctx.moveTo(pointsCoords[0].x, pointsCoords[0].y);
+      for (let i = 1; i < pointsCoords.length; i++) {
+        ctx.lineTo(pointsCoords[i].x, pointsCoords[i].y);
+      }
+
+      // outer glow
+      ctx.shadowColor = '#2b6aff';
+      ctx.shadowBlur = 16;
+      ctx.strokeStyle = '#4b82ff';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // inner bright line
+      ctx.shadowBlur = 8;
+      ctx.strokeStyle = '#7aa2ff';
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      // reset shadow
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'transparent';
+
+      // ----- draw last price marker + dot -----
+      const lastPoint = pointsCoords[pointsCoords.length - 1];
+      ctx.beginPath();
+      ctx.arc(lastPoint.x, lastPoint.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#2b6aff';
+      ctx.shadowColor = '#2b6aff';
+      ctx.shadowBlur = 18;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // small label near last point
+      ctx.font = '600 10px Inter, sans-serif';
+      ctx.fillStyle = '#d2def0';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)';
+      ctx.shadowBlur = 6;
+      ctx.fillText('63,842', lastPoint.x - 35, lastPoint.y - 12);
+      ctx.shadowBlur = 0;
+
+      // ----- price axis labels (simplified) -----
+      ctx.font = '500 9px Inter, sans-serif';
+      ctx.fillStyle = '#5e7189';
+      ctx.fillText(minVal.toFixed(0), 4, height - 6);
+      ctx.fillText(maxVal.toFixed(0), 4, 16);
+
+      // ----- small green/red volume bars? just decorative dots -----
+      // (optional, but keep clean)
+    }
+
+    drawChart();
+
+    // redraw on resize (debounced)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const newRect = container.getBoundingClientRect();
+        const newWidth = newRect.width;
+        if (Math.abs(newWidth - width) > 5) {
+          canvas.width = newWidth * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width = newWidth + 'px';
+          canvas.style.height = height + 'px';
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.scale(dpr, dpr);
+          // update width variable if needed (but data mapping uses local width from closure)
+          // simpler: re-run draw with updated width
+          // we'll redefine width inside a new function
+          (function redraw() {
+            const w = newWidth;
+            // re-map using new width
+            ctx.clearRect(0, 0, w, height);
+
+            // same drawing logic but with new width
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+            bgGrad.addColorStop(0, '#0f141c');
+            bgGrad.addColorStop(1, '#0c1118');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, w, height);
+
+            ctx.strokeStyle = '#1e2732';
+            ctx.lineWidth = 0.5;
+            for (let i = 1; i < 5; i++) {
+              const y = (i / 5) * height;
+              ctx.beginPath();
+              ctx.moveTo(0, y);
+              ctx.lineTo(w, y);
+              ctx.strokeStyle = '#1e2732';
+              ctx.stroke();
+            }
+            for (let i = 1; i < 6; i++) {
+              const x = (i / 6) * w;
+              ctx.beginPath();
+              ctx.moveTo(x, 0);
+              ctx.lineTo(x, height);
+              ctx.strokeStyle = '#1a212b';
+              ctx.stroke();
+            }
+
+            const padX = 16;
+            const padY = 18;
+            const gw = w - padX * 2;
+            const gh = height - padY * 2;
+            const coords = data.map((val, idx) => {
+              const x = padX + (idx / (points - 1)) * gw;
+              const y = padY + gh - ((val - minVal) / (maxVal - minVal)) * gh;
+              return { x, y };
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(coords[0].x, coords[0].y);
+            for (let i = 1; i < coords.length; i++) ctx.lineTo(coords[i].x, coords[i].y);
+            ctx.lineTo(coords[coords.length - 1].x, height - 6);
+            ctx.lineTo(coords[0].x, height - 6);
+            ctx.closePath();
+            const fillGrad = ctx.createLinearGradient(0, 0, 0, height);
+            fillGrad.addColorStop(0, 'rgba(43, 106, 255, 0.25)');
+            fillGrad.addColorStop(0.8, 'rgba(43, 106, 255, 0.02)');
+            ctx.fill
