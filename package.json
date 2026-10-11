@@ -1,0 +1,27 @@
+{
+  "name": "fx-trading",
+  "version": "1.0.0",
+  "description": "FX Trading Terminal Demo",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/banclot122-art/fx-trading.git"
+  },
+  "keywords": [
+    "trading",
+    "fx",
+    "demo"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/banclot122-art/fx-trading/issues"
+  },
+  "homepage": "https://github.com/banclot122-art/fx-trading#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
