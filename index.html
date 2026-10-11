@@ -1041,4 +1041,47 @@
             const fillGrad = ctx.createLinearGradient(0, 0, 0, height);
             fillGrad.addColorStop(0, 'rgba(43, 106, 255, 0.25)');
             fillGrad.addColorStop(0.8, 'rgba(43, 106, 255, 0.02)');
-            ctx.fill
+            ctx.fillStyle = fillGrad;
+            ctx.fill();
+
+            // stroke the line
+            ctx.beginPath();
+            ctx.moveTo(coords[0].x, coords[0].y);
+            for (let i = 1; i < coords.length; i++) ctx.lineTo(coords[i].x, coords[i].y);
+            ctx.shadowColor = '#2b6aff';
+            ctx.shadowBlur = 16;
+            ctx.strokeStyle = '#4b82ff';
+            ctx.lineWidth = 3.5;
+            ctx.stroke();
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = '#7aa2ff';
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // last point marker
+            const lastPt = coords[coords.length - 1];
+            ctx.beginPath();
+            ctx.arc(lastPt.x, lastPt.y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#2b6aff';
+            ctx.shadowColor = '#2b6aff';
+            ctx.shadowBlur = 18;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          })();
+        }
+      }, 150);
+    });
+  </script>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+</body>
+</html>
